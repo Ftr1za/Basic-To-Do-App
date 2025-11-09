@@ -1,6 +1,8 @@
-def readingfile(filepath="todoapp.txt"):
+FILEPATH = "todoapp.txt"
+
+def readingfile(filepath=FILEPATH):
     """opening a file and read:
-     file = open("todoapp.txt", "r")
+     file = open( FILEPATH, "r")
      tasks = file.readlines()
      file.close()"""
     with open(filepath, "r") as func_file:
@@ -8,9 +10,9 @@ def readingfile(filepath="todoapp.txt"):
     return func_tasks
 
 
-def writtingfile(func_tasks2 , filepath="todoapp.txt"):
+def writtingfile(func_tasks2 , filepath=FILEPATH):
     """creating a new file/overwrite a existing file:
-    file = open("todoapp.txt' , 'w')
+    file = open( FILEPATH , 'w')
     file.writelines(tasks)
     file.close()"""
 
