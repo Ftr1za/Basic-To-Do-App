@@ -8,15 +8,25 @@ clock = fsg.Text("",key= "DT")
 date = fsg.Text("",key= "D")
 label = fsg.Text("Type a To Do:")
 input_box = fsg.InputText(tooltip= "Enter a ToDo", key="To DO")
-add_button = fsg.Button("Add")
-list_box = fsg.Listbox(values=Functions.readingfile(), key= "Item",
-                       enable_events = True, size=[45,20])
+add_button = fsg.Button("Add", mouseover_colors= "Black")
+
+list_box = fsg.Listbox(values=Functions.readingfile(),
+                       key= "Item",
+                       enable_events = True,
+                       size=[45,20])
+
 edit_button = fsg.Button("Edit")
 complete_button = fsg.Button("Complete")
 exit_button = fsg.Button("Exit")
 
 window = fsg.Window('To Do App',
-                    layout=[[date],[clock],[label],[input_box ,add_button],[list_box, edit_button,complete_button],[exit_button]],
+                    layout=[
+                        [date],
+                        [clock],
+                        [label],
+                        [input_box ,add_button],
+                        [list_box, edit_button,complete_button],
+                        [exit_button]],
                     font=('Poppins', 16))
 while True:
     event, values = window.read(timeout=200)
@@ -27,12 +37,15 @@ while True:
         window["D"].update(value=time.strftime("%A,%d-%m-%Y"))
     match event:
         case 'Add':
-            past_todo = Functions.readingfile()
-            new_todo = values['To DO'] + "\n"
-            past_todo.append(new_todo)
-            Functions.writtingfile(past_todo)
-            window["Item"].update(values=past_todo)
-            window["To DO"].update(value="")
+            if values['To DO'] != "":
+                past_todo = Functions.readingfile()
+                new_todo = values['To DO'] + "\n"
+                past_todo.append(new_todo)
+                Functions.writtingfile(past_todo)
+                window["Item"].update(values=past_todo)
+                window["To DO"].update(value="")
+            else:
+                fsg.popup("Enter a To Do", font=('Poppins', 16))
         case 'Edit':
             try:
                 unedited = values['Item'][0]
