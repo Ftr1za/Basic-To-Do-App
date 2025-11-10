@@ -1,6 +1,11 @@
 import Functions
 import FreeSimpleGUI as fsg
 import time
+import os
+
+if not os.path.exists("todoapp.txt"):
+    with open("todoapp.txt", "w") as file:
+        pass
 
 fsg.theme('LightBlue3')
 
@@ -45,7 +50,7 @@ while True:
                 window["Item"].update(values=past_todo)
                 window["To DO"].update(value="")
             else:
-                fsg.popup("Enter a To Do", font=('Poppins', 16))
+                fsg.popup("Enter a To Do First!", font=('Poppins', 16))
         case 'Edit':
             try:
                 unedited = values['Item'][0]
