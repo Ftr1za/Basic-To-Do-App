@@ -1,5 +1,3 @@
-from turtledemo.sorting_animate import enable_keys
-
 import Functions
 import FreeSimpleGUI as fsg
 
@@ -26,6 +24,7 @@ while True:
             past_todo.append(new_todo)
             Functions.writtingfile(past_todo)
             window["Item"].update(values=past_todo)
+            window["To DO"].update(value="")
         case 'Edit':
             unedited = values['Item'][0]
             edited_todo = values['To DO'] + "\n"
@@ -41,6 +40,7 @@ while True:
             past_todo.pop(index)
             Functions.writtingfile(past_todo)
             window["Item"].update(values=past_todo)
+            window["To DO"].update(value="")
         case 'Item':
             window["To DO"].update(value=values['Item'][0])
         case fsg.WIN_CLOSED:
