@@ -1,7 +1,12 @@
 import Functions
 import FreeSimpleGUI as fsg
+import time
 
-label = fsg.Text("Type a To Do")
+fsg.theme('LightBlue3')
+
+clock = fsg.Text("",key= "DT")
+date = fsg.Text("",key= "D")
+label = fsg.Text("Type a To Do:")
 input_box = fsg.InputText(tooltip= "Enter a ToDo", key="To DO")
 add_button = fsg.Button("Add")
 list_box = fsg.Listbox(values=Functions.readingfile(), key= "Item",
@@ -11,12 +16,15 @@ complete_button = fsg.Button("Complete")
 exit_button = fsg.Button("Exit")
 
 window = fsg.Window('To Do App',
-                    layout=[[label],[input_box ,add_button],[list_box, edit_button,complete_button],[exit_button]],
+                    layout=[[date],[clock],[label],[input_box ,add_button],[list_box, edit_button,complete_button],[exit_button]],
                     font=('Poppins', 16))
 while True:
-    event, values = window.read()
-    print(event)
-    print(values)
+    event, values = window.read(timeout=200)
+    if event == fsg.WIN_CLOSED:
+        break
+    else:
+        window["DT"].update(value= time.strftime("%I:%M%p"))
+        window["D"].update(value=time.strftime("%A,%d-%m-%Y"))
     match event:
         case 'Add':
             past_todo = Functions.readingfile()
@@ -26,21 +34,28 @@ while True:
             window["Item"].update(values=past_todo)
             window["To DO"].update(value="")
         case 'Edit':
-            unedited = values['Item'][0]
-            edited_todo = values['To DO'] + "\n"
-            past_todo = Functions.readingfile()
-            index = past_todo.index(unedited)
-            past_todo[index] = edited_todo
-            Functions.writtingfile(past_todo)
-            window["Item"].update(values=past_todo)
+            try:
+                unedited = values['Item'][0]
+                edited_todo = values['To DO'] + "\n"
+                past_todo = Functions.readingfile()
+                index = past_todo.index(unedited)
+                past_todo[index] = edited_todo
+                Functions.writtingfile(past_todo)
+                window["Item"].update(values=past_todo)
+                window["To DO"].update(value="")
+            except IndexError:
+                fsg.popup('Please Select a To Do', font=("poppins", 16))
         case 'Complete':
-            completed = values['Item'][0]
-            past_todo = Functions.readingfile()
-            index = past_todo.index(completed)
-            past_todo.pop(index)
-            Functions.writtingfile(past_todo)
-            window["Item"].update(values=past_todo)
-            window["To DO"].update(value="")
+            try:
+                completed = values['Item'][0]
+                past_todo = Functions.readingfile()
+                index = past_todo.index(completed)
+                past_todo.pop(index)
+                Functions.writtingfile(past_todo)
+                window["Item"].update(values=past_todo)
+                window["To DO"].update(value="")
+            except IndexError:
+                fsg.popup('Please Select a To Do', font=("poppins", 16))
         case 'Item':
             window["To DO"].update(value=values['Item'][0])
         case fsg.WIN_CLOSED:
